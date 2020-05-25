@@ -18,20 +18,13 @@ purchasesHistory = [ ("user1", [["item1", "item2", "item3"] , ["item1", "item2",
 createEmptyFreqList []=[]
 createEmptyFreqList (x:xs)=(x,[]):(createEmptyFreqList xs)
 
---creatUsersTemplate [] (i:is)=[]                      --helper 
---creatUsersTemplate (u:us) (i:is)=((u,createEmptyFreqList (i:is)):creatUsersTemplate us (i:is))
+
 
 countItems i1 i2 []=0               --helper counts two elements together in a list of lists
 countItems i1 i2 (p:ps)| elem i1 p && elem i2 p =1+countItems i1 i2 ps
                        |otherwise =countItems i1 i2 ps 
 
 
-
---creatUserTemplate u1 (i:is) =(u1, createEmptyFreqList (i:is))   --helper create only one element from creatUsersTemplate
-
-
-
----------------------------------------freqlistItems Nadine---------------------------------------------------------------
 concat1[]=[]                                 --create list of tupels
 concat1 ((item,[]):z)=[]++concat1 z
 concat1 ((item,(x:xs)):z)= (x:xs)++concat1 z
@@ -48,7 +41,6 @@ sumTupelItems (x:xs) y= if (tupelContain x y) then (x,(sumTupel x y)):sumTupelIt
 freqListItemsHelper i ((user,x):xs)=if (i==user) then sumTupelItems items (concat1 x) else freqListItemsHelper i xs
 freqListItems  x=freqListItemsHelper x (getAllUsersStats (purchasesHistory))
 
--------------------------------------------------freqlistItems nadine------------------------------------------------------------------------
 
 getStatForItem  i1 [] p=[]               --helper get statistic for one item of one user
 getStatForItem  i1 (i:is) p = if ((i/=i1 )&& ((countItems i1 i p)>0) )then (  (i,countItems i i1 p):(getStatForItem i1 is p))
@@ -74,12 +66,6 @@ countAllItemsMul2 (i:is) p	= if (count i p >0)then ((i,2*(count i p)):countAllIt
                                                else countAllItemsMul2 is p 						
 							
 							
---freqListItemsHelper u1 [] =[]		--helper just to take the purchased history with user					
---freqListItemsHelper u1 ((u,p):ps) =if u1==u then countAllItemsMul2 items p
-  --                                          else freqListItemsHelper u1 ps
-											
-											
---freqListItems u1 =freqListItemsHelper u1 purchasesHistory
 
 countItemCart i [] p=0     -- helper count occurences of item i with every element from cart
 countItemCart i (c:cs) p =if (i/=c)then(( countItems i c p )+ (countItemCart i cs p))
@@ -96,28 +82,11 @@ freqListCartHelper u1 (c:cs) ((u,p):ps)	= if u1==u then countItemsCart items (c:
                                                    else freqListCartHelper u1 (c:cs) ps	
 
 freqListCart u1	(c:cs) =freqListCartHelper u1 (c:cs) purchasesHistory											   
-																			  
---addTwoLists [] []=[]			--helper to add two lists together	
---addTwoLists [] ((c,d):ds) =((c,d):ds)
---addTwoLists  ((a,b):bs) []=((a,b):bs)														  
---addTwoLists ((a,b):bs) ((c,d):ds)=((a,(b+d)):addTwoLists bs ds)
+																	
 
 freqListCartAndItems u1 (c:cs) =addTwoListUnordered (freqListItems u1) (freqListCart u1 (c:cs))
 
---countItemUsingLength i []=0
---countItemUsingLength i (p:ps)= if(elem i p ) then (((length p )-1)+countItemUsingLength i ps)
---                                             else countItemUsingLength i ps	
-											 
-											 
---countItemAllUsers i []=0
---countItemAllUsers  i ((u,p):ps)	=countItemUsingLength i p + countItemAllUsers i ps
 
-
---countItemsAllUsers [] ((u,p):ps)=[]
---countItemsAllUsers (i:is) ((u,p):ps)= if countItemAllUsers i ((u,p):ps) >0 then ((i,countItemAllUsers i ((u,p):ps)):countItemsAllUsers is ((u,p):ps))
---                                                                          else countItemsAllUsers is ((u,p):ps)	
-																		   
---freqListUsers u1 = countItemsAllUsers items purchasesHistory
 
 
 addTwoListUnordered [] []=[]    --helper adds the items in two unordered lists
@@ -189,15 +158,6 @@ randomZeroToX :: Int -> Int 	--helper generates random number from o to x
 randomZeroToX x= unsafePerformIO (getStdRandom (randomR (0, x)))
 											  
 											  
---extractMaxFreq []=0    --helper takes a list and extracts the highest frequency
---extractMaxFreq((u,f):us)=if (f>(extractMaxFreq us)) then f
- --                                                    else extractMaxFreq us
-													 
---getListOfMaxFreq m []=[]        --helper puts only items with frequency equal to the max frequency
---getListOfMaxFreq m ((u,f):us) = if(m==f) then ((u,f):getListOfMaxFreq m us)
---                                         else getListOfMaxFreq m us	
-
-
 
 chooseRandomIndex []=[]  --helper takes a list and chooses a random index in it and onlyy extracts the element
 chooseRandomIndex a = extractItem (    randomZeroToX      ((length (replicateList a )) -1)            )      (  replicateList a   )    
